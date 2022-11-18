@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from datetime import datetime
 import os
 import pandas as pd
 import PySimpleGUI as sg
@@ -21,7 +22,14 @@ def create_new_duration_node(duration_node_name):
     pd.DataFrame(columns=['start', 'end']).to_csv(DURATIONS_FOLDER + duration_node_name + '.csv', index=False)
 
 def update_window(window):
-    pass
+    try:
+        start_time = datetime.strptime(window[('-START_TIME-')].get(), "%Y-%m-%d %H:%M:%S")
+        time_now = datetime.now()
+        elapsed_time = time_now - start_time
+
+        window[('-ELAPSED_TIME-')].update(elapsed_time)
+    except ValueError as e:
+        pass
 
 
 def main():
@@ -31,7 +39,6 @@ def main():
     duration_nodes_list = os.listdir('./durations')
 
     # ----------------  Create Layout  ---------------- #
-
     layout = [[sg.Text('Duration', font='Any 16')]]
     layout += [[sg.Text('Add Duration:'),
                sg.InputText(key='-ADD_TYPE-'),
@@ -40,14 +47,17 @@ def main():
     layout += [
         [sg.Text('Selected Node:'),
          sg.Combo(list(duration_nodes_list), size=(20, 1), key='-DATA_TYPE-'),
-         sg.Text('Start', enable_events=True, key='START')]]
+         sg.Text('Start', enable_events=True, key='START'),
+         sg.Text('End', enable_events=True, key='END')]]
 
     bar_color = sg.theme_progress_bar_color()
     this_color = BAR_COLORS[1 % len(BAR_COLORS)]
 
     layout += [[sg.Text("Duration", size=(5, 1), key='-NAME-'),
                 sg.ProgressBar(100, 'h', size=(10, 15), key='-PROG-',
-                               bar_color=(this_color, bar_color[1]))]],
+                               bar_color=(this_color, bar_color[1])),
+                sg.Text("", size=(20, 1), key='-START_TIME-'),
+                sg.Text("", size=(20, 1), key='-ELAPSED_TIME-')]],
 
     layout += [[sg.Text('Refresh', font='Any 8', key='-REFRESH-', enable_events=True),
                 sg.Text('❎', enable_events=True, key='Exit Text')]]
@@ -66,7 +76,9 @@ def main():
         elif event == 'ADD':
             create_new_duration_node(values['-ADD_TYPE-'])
         elif event == 'START':
-            print(values['-DATA_TYPE-'])
+            window[('-START_TIME-')].update(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        elif event == 'END':
+            pass
 
         update_window(window)
 
