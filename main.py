@@ -16,10 +16,17 @@ UPDATE_FREQUENCY_MILLISECONDS = 20 * 1000
 
 BAR_COLORS = ('#23a0a0', '#56d856', '#be45be', '#5681d8', '#d34545', '#BE7C29')
 
+DURATION_COLUMNS = ['start', 'end', 'minutes']
 DURATIONS_FOLDER = './durations/'
 
 def create_new_duration_node(duration_node_name):
-    pd.DataFrame(columns=['start', 'end']).to_csv(DURATIONS_FOLDER + duration_node_name + '.csv', index=False)
+    pd.DataFrame(columns=DURATION_COLUMNS).to_csv(DURATIONS_FOLDER + duration_node_name + '.csv', index=False)
+
+def add_new_duration_entry(duration_node_name, start_time, end_time, seconds):
+    df = pd.read_csv(DURATIONS_FOLDER + duration_node_name)
+    df.loc[len(df)] = [start_time, end_time, seconds]
+
+    df.to_csv(DURATIONS_FOLDER + duration_node_name, index=False)
 
 def update_window(window):
     try:
@@ -27,7 +34,10 @@ def update_window(window):
         time_now = datetime.now()
         elapsed_time = time_now - start_time
 
-        window[('-ELAPSED_TIME-')].update(elapsed_time)
+        duration_percent = elapsed_time.total_seconds() / 60 / 60 * 100
+        window[('-PROG-')].update(int(duration_percent))
+        window[('-ELAPSED_TIME-')].update(f'{elapsed_time.total_seconds() / 60:.2f}')
+
     except ValueError as e:
         pass
 
@@ -76,9 +86,17 @@ def main():
         elif event == 'ADD':
             create_new_duration_node(values['-ADD_TYPE-'])
         elif event == 'START':
-            window[('-START_TIME-')].update(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            if window[('-START_TIME-')].get() == "":
+                window[('-START_TIME-')].update(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         elif event == 'END':
-            pass
+            add_new_duration_entry(
+                values['-DATA_TYPE-'],
+                window[('-START_TIME-')].get(),
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                window[('-ELAPSED_TIME-')].get())
+
+            window[('-START_TIME-')].update("")
+            window[('-ELAPSED_TIME-')].update("")
 
         update_window(window)
 
