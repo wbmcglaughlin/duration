@@ -4,12 +4,6 @@ import os
 import pandas as pd
 import PySimpleGUI as sg
 
-"""
-    Desktop "Rainmeter" style widget - Drive usage
-    Requires: psutil
-    Shows a bar graph of space used for each drive partician that psutil finds
-"""
-
 ALPHA = 0.7
 THEME = 'black'
 UPDATE_FREQUENCY_MILLISECONDS = 20 * 1000
@@ -19,8 +13,10 @@ BAR_COLORS = ('#23a0a0', '#56d856', '#be45be', '#5681d8', '#d34545', '#BE7C29')
 DURATION_COLUMNS = ['start', 'end', 'minutes']
 DURATIONS_FOLDER = './durations/'
 
-def create_new_duration_node(duration_node_name):
+def create_new_duration_node(window, duration_node_name):
     pd.DataFrame(columns=DURATION_COLUMNS).to_csv(DURATIONS_FOLDER + duration_node_name + '.csv', index=False)
+
+    window['-DATA_TYPE-'].update(value=duration_node_name + '.csv', values=list(os.listdir('./durations')))
 
 def add_new_duration_entry(duration_node_name, start_time, end_time, seconds):
     df = pd.read_csv(DURATIONS_FOLDER + duration_node_name)
@@ -30,13 +26,13 @@ def add_new_duration_entry(duration_node_name, start_time, end_time, seconds):
 
 def update_window(window):
     try:
-        start_time = datetime.strptime(window[('-START_TIME-')].get(), "%Y-%m-%d %H:%M:%S")
+        start_time = datetime.strptime(window['-START_TIME-'].get(), "%Y-%m-%d %H:%M:%S")
         time_now = datetime.now()
         elapsed_time = time_now - start_time
 
         duration_percent = elapsed_time.total_seconds() / 60 / 60 * 100
-        window[('-PROG-')].update(int(duration_percent))
-        window[('-ELAPSED_TIME-')].update(f'{elapsed_time.total_seconds() / 60:.2f}')
+        window['-PROG-'].update(int(duration_percent))
+        window['-ELAPSED_TIME-'].update(f'{elapsed_time.total_seconds() / 60:.2f}')
 
     except ValueError as e:
         pass
@@ -50,15 +46,19 @@ def main():
 
     # ----------------  Create Layout  ---------------- #
     layout = [[sg.Text('Duration', font='Any 16')]]
-    layout += [[sg.Text('Add Duration:'),
-               sg.InputText(key='-ADD_TYPE-'),
-               sg.Text('Add', enable_events=True, key='ADD')
-                ]]
-    layout += [
-        [sg.Text('Selected Node:'),
-         sg.Combo(list(duration_nodes_list), size=(20, 1), key='-DATA_TYPE-'),
+
+    layout += [[
+        sg.Text('Add Duration:'),
+        sg.InputText(size=(30, 1), key='-ADD_TYPE-'),
+        sg.Text('Add', enable_events=True, key='ADD')
+        ]]
+
+    layout += [[
+         sg.Text('Selected Node:'),
+         sg.Combo(list(duration_nodes_list), size=(30, 1), key='-DATA_TYPE-'),
          sg.Text('Start', enable_events=True, key='START'),
-         sg.Text('End', enable_events=True, key='END')]]
+         sg.Text('End', enable_events=True, key='END')
+         ]]
 
     bar_color = sg.theme_progress_bar_color()
     this_color = BAR_COLORS[1 % len(BAR_COLORS)]
@@ -84,19 +84,19 @@ def main():
         if event == sg.WIN_CLOSED or event.startswith('Exit'):
             break
         elif event == 'ADD':
-            create_new_duration_node(values['-ADD_TYPE-'])
+            create_new_duration_node(window, values['-ADD_TYPE-'])
         elif event == 'START':
-            if window[('-START_TIME-')].get() == "":
-                window[('-START_TIME-')].update(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            if window['-START_TIME-'].get() == "":
+                window['-START_TIME-'].update(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         elif event == 'END':
             add_new_duration_entry(
                 values['-DATA_TYPE-'],
-                window[('-START_TIME-')].get(),
+                window['-START_TIME-'].get(),
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                window[('-ELAPSED_TIME-')].get())
+                window['-ELAPSED_TIME-'].get())
 
-            window[('-START_TIME-')].update("")
-            window[('-ELAPSED_TIME-')].update("")
+            window['-START_TIME-'].update("")
+            window['-ELAPSED_TIME-'].update("")
 
         update_window(window)
 
