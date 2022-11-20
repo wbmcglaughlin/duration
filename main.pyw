@@ -51,7 +51,7 @@ def update_window(window):
         time_now = datetime.now()
         elapsed_time = time_now - start_time
 
-        duration_percent = elapsed_time.total_seconds() / 60 / 60 * 100
+        duration_percent = elapsed_time.total_seconds() / 60 / window['-DURATION_TIME-'].get() * 100
         if DEBUG_MODE:
             duration_percent *= 200
 
@@ -74,7 +74,8 @@ def main():
     layout += [[
         sg.Text('New:'),
         sg.InputText(size=(20, 1), key='-ADD_TYPE-'),
-        sg.Text('Add', enable_events=True, key='ADD')
+        sg.Text('Add', enable_events=True, key='ADD'),
+        sg.Combo(list([15, 30, 45, 60]), size=(5, 1), key='-DURATION_TIME-')
     ]]
 
     layout += [[
