@@ -6,6 +6,8 @@ import PySimpleGUI as sg
 import sys
 from os import path, environ
 
+DEBUG_MODE = True
+
 ALPHA = 0.7
 THEME = 'black'
 UPDATE_FREQUENCY_MILLISECONDS = 20 * 1000
@@ -15,15 +17,17 @@ BAR_COLORS = ('#23a0a0', '#56d856', '#be45be', '#5681d8', '#d34545', '#BE7C29')
 APP_NAME = 'durations'
 DURATION_COLUMNS = ['start', 'end', 'minutes']
 DURATIONS_FOLDER = './data/'
+DEBUG_DURATIONS = './durations'
 
 def get_app_path():
+    if DEBUG_MODE:
+        return DEBUG_DURATIONS
     if sys.platform == 'win32':
-        print(path.join(environ['APPDATA'], APP_NAME))
         return path.join(environ['APPDATA'], APP_NAME)
 
 def get_app_data_path():
     if sys.platform == 'win32':
-        return path.join(environ['APPDATA'], APP_NAME, DURATIONS_FOLDER)
+        return path.join(get_app_path(), DURATIONS_FOLDER)
 
 def create_new_duration_node(window, duration_node_name):
     pd.DataFrame(columns=DURATION_COLUMNS).to_csv(get_app_data_path() + duration_node_name + '.csv', index=False)
@@ -43,6 +47,9 @@ def update_window(window):
         elapsed_time = time_now - start_time
 
         duration_percent = elapsed_time.total_seconds() / 60 / 60 * 100
+        if DEBUG_MODE:
+            duration_percent *= 200
+
         window['-PROG-'].update(int(duration_percent))
         window['-ELAPSED_TIME-'].update(f'{elapsed_time.total_seconds() / 60:.2f}')
 
@@ -109,6 +116,7 @@ def main():
 
             window['-START_TIME-'].update("")
             window['-ELAPSED_TIME-'].update("")
+            window['-PROG-'].update(int(0))
 
         update_window(window)
 
