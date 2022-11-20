@@ -6,7 +6,7 @@ import PySimpleGUI as sg
 import sys
 from os import path, environ
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 ALPHA = 0.7
 THEME = 'black'
@@ -19,26 +19,31 @@ DURATION_COLUMNS = ['start', 'end', 'minutes']
 DURATIONS_FOLDER = './data/'
 DEBUG_DURATIONS = './durations'
 
+
 def get_app_path():
     if DEBUG_MODE:
         return DEBUG_DURATIONS
     if sys.platform == 'win32':
         return path.join(environ['APPDATA'], APP_NAME)
 
+
 def get_app_data_path():
     if sys.platform == 'win32':
         return path.join(get_app_path(), DURATIONS_FOLDER)
+
 
 def create_new_duration_node(window, duration_node_name):
     pd.DataFrame(columns=DURATION_COLUMNS).to_csv(get_app_data_path() + duration_node_name + '.csv', index=False)
 
     window['-DATA_TYPE-'].update(value=duration_node_name + '.csv', values=list(os.listdir(get_app_data_path())))
 
+
 def add_new_duration_entry(duration_node_name, start_time, end_time, seconds):
     df = pd.read_csv(get_app_data_path() + duration_node_name)
     df.loc[len(df)] = [start_time, end_time, seconds]
 
     df.to_csv(get_app_data_path() + duration_node_name, index=False)
+
 
 def update_window(window):
     try:
@@ -67,32 +72,32 @@ def main():
     layout = [[sg.Text('Duration', font='Any 16')]]
 
     layout += [[
-        sg.Text('Add Duration:'),
-        sg.InputText(size=(30, 1), key='-ADD_TYPE-'),
+        sg.Text('New:'),
+        sg.InputText(size=(20, 1), key='-ADD_TYPE-'),
         sg.Text('Add', enable_events=True, key='ADD')
-        ]]
+    ]]
 
     layout += [[
-         sg.Text('Selected Node:'),
-         sg.Combo(list(duration_nodes_list), size=(30, 1), key='-DATA_TYPE-'),
-         sg.Text('Start', enable_events=True, key='START'),
+        sg.Text('Selected:'),
+        sg.Combo(list(duration_nodes_list), size=(20, 1), key='-DATA_TYPE-'),
+        sg.Text('Start', enable_events=True, key='START'),
          sg.Text('End', enable_events=True, key='END')
          ]]
 
     bar_color = sg.theme_progress_bar_color()
     this_color = BAR_COLORS[1 % len(BAR_COLORS)]
 
-    layout += [[sg.Text("Duration", size=(5, 1), key='-NAME-'),
-                sg.ProgressBar(100, 'h', size=(10, 15), key='-PROG-',
+    layout += [[sg.Text("Duration: ", key='-NAME-'),
+                sg.ProgressBar(100, 'h', size=(10, 18), key='-PROG-',
                                bar_color=(this_color, bar_color[1])),
-                sg.Text("", size=(20, 1), key='-START_TIME-'),
-                sg.Text("", size=(20, 1), key='-ELAPSED_TIME-')]],
+                sg.Text("", size=(20, 1), key='-START_TIME-')]],
 
     layout += [[sg.Text('Refresh', font='Any 8', key='-REFRESH-', enable_events=True),
-                sg.Text('❎', enable_events=True, key='Exit Text')]]
+                sg.Text('❎', enable_events=True, key='Exit Text'),
+                sg.Text("", size=(20, 1), key='-ELAPSED_TIME-')]]
 
     # ----------------  Create Window  ----------------
-    window = sg.Window('Duration', layout, keep_on_top=True, grab_anywhere=True, no_titlebar=True,
+    window = sg.Window('Duration', layout, size=(350, 150), keep_on_top=True, grab_anywhere=True, no_titlebar=True,
                        alpha_channel=ALPHA, use_default_focus=False, finalize=True)
 
     update_window(window)  # sets the progress bars
