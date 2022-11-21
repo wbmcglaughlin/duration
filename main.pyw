@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import subprocess
 from datetime import datetime
 import os
 import pandas as pd
@@ -6,7 +7,7 @@ import PySimpleGUI as sg
 import sys
 from os import path, environ
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 ALPHA = 0.7
 THEME = 'black'
@@ -95,10 +96,11 @@ def main():
 
     layout += [[sg.Text('Refresh', font='Any 8', key='-REFRESH-', enable_events=True),
                 sg.Text('❎', enable_events=True, key='Exit Text'),
-                sg.Text("", size=(20, 1), key='-ELAPSED_TIME-')]]
+                sg.Text("", size=(20, 1), key='-ELAPSED_TIME-'),
+                sg.Text("Open Data", key='-DATA_FOLDER-', enable_events=True, justification='right')]]
 
     # ----------------  Create Window  ----------------
-    window = sg.Window('Duration', layout, size=(350, 150), keep_on_top=True, grab_anywhere=True, no_titlebar=True,
+    window = sg.Window('Duration', layout, keep_on_top=True, grab_anywhere=True, no_titlebar=True,
                        alpha_channel=ALPHA, use_default_focus=False, finalize=True)
 
     update_window(window)  # sets the progress bars
@@ -123,6 +125,8 @@ def main():
             window['-START_TIME-'].update("")
             window['-ELAPSED_TIME-'].update("")
             window['-PROG-'].update(int(0))
+        elif event == '-DATA_FOLDER-':
+            subprocess.Popen(get_app_path())
 
         update_window(window)
 
