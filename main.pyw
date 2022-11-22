@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import subprocess
 from datetime import datetime
 import os
 import pandas as pd
@@ -25,7 +24,6 @@ def add_new_duration_entry(duration_node_name, start_time, end_time, seconds):
     df.loc[len(df)] = [start_time, end_time, seconds]
 
     df.to_csv(get_app_data_path() + duration_node_name, index=False)
-
 
 def update_window(window):
     try:
@@ -60,6 +58,12 @@ def main():
     while True:
         event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
         if event == sg.WIN_CLOSED or event.startswith('Exit'):
+            add_new_duration_entry(
+                values['-DATA_TYPE-'],
+                window['-START_TIME-'].get(),
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                window['-ELAPSED_TIME-'].get())
+
             break
         elif event == 'ADD':
             create_new_duration_node(window, values['-ADD_TYPE-'])
