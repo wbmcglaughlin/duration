@@ -17,7 +17,6 @@ def generate_layout():
 
     layout += [[sg.Text('Refresh', font='Any 8', key='-REFRESH-', enable_events=True),
                 sg.Text('❎', enable_events=True, key='Exit Text'),
-                sg.Text("", size=(20, 1), key='-ELAPSED_TIME-'),
                 sg.Text("Open Data", key='-DATA_FOLDER-', enable_events=True, justification='right')]]
 
     return layout
@@ -31,12 +30,14 @@ def main_tab():
 
     main_tab_layout = [[sg.Text("Duration: ", key='-NAME-'),
                         sg.ProgressBar(100, 'h', size=(10, 18), key='-PROG-', bar_color=(this_color, bar_color[1])),
-                        sg.Text("", size=(20, 1), key='-START_TIME-')]]
+                        sg.Text("", key='-START_TIME-'),
+                        sg.Text("", key='-ELAPSED_TIME-')
+                        ]]
 
     main_tab_layout += [[
         sg.Text('Selected:'),
         sg.Combo(list(duration_nodes_list), size=(20, 1), key='-DATA_TYPE-'),
-        sg.Combo(list([15, 30, 45, 60]), size=(5, 1), key='-DURATION_TIME-'),
+        sg.Combo(list([15, 30, 45, 60]), default_value=60, size=(5, 1), key='-DURATION_TIME-'),
         sg.Text('Start', enable_events=True, key='START'),
         sg.Text('End', enable_events=True, key='END')
     ]]

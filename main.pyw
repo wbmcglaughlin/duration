@@ -77,7 +77,8 @@ def main():
             window['-ELAPSED_TIME-'].update("")
             window['-PROG-'].update(int(0))
         elif event == '-DATA_FOLDER-':
-            subprocess.Popen(get_app_path())
+            abs_path = os.path.abspath(get_app_path())
+            os.startfile(abs_path)
 
         update_window(window)
 
