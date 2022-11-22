@@ -58,11 +58,12 @@ def main():
     while True:
         event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
         if event == sg.WIN_CLOSED or event.startswith('Exit'):
-            add_new_duration_entry(
-                values['-DATA_TYPE-'],
-                window['-START_TIME-'].get(),
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                window['-ELAPSED_TIME-'].get())
+            if window['-START_TIME-'].get() != "":
+                add_new_duration_entry(
+                    values['-DATA_TYPE-'],
+                    window['-START_TIME-'].get(),
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    window['-ELAPSED_TIME-'].get())
 
             break
         elif event == 'ADD':
@@ -77,15 +78,16 @@ def main():
                 window['-PROJECT_TIME-'].update(sum(df['minutes']))
 
         elif event == 'END':
-            add_new_duration_entry(
-                values['-DATA_TYPE-'],
-                window['-START_TIME-'].get(),
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                window['-ELAPSED_TIME-'].get())
+            if window['-START_TIME-'].get() != "":
+                add_new_duration_entry(
+                    values['-DATA_TYPE-'],
+                    window['-START_TIME-'].get(),
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    window['-ELAPSED_TIME-'].get())
 
-            window['-START_TIME-'].update("")
-            window['-ELAPSED_TIME-'].update("")
-            window['-PROG-'].update(int(0))
+                window['-START_TIME-'].update("")
+                window['-ELAPSED_TIME-'].update("")
+                window['-PROG-'].update(int(0))
         elif event == '-DATA_FOLDER-':
             abs_path = os.path.abspath(get_app_path())
             os.startfile(abs_path)
