@@ -11,7 +11,8 @@ def generate_layout():
     layout = [[sg.TabGroup(
         [[
             sg.Tab('main', main_tab()),
-            sg.Tab('add', add_tab())
+            sg.Tab('add', add_tab()),
+            sg.Tab('info', info_tab())
         ]]
     )]]
 
@@ -53,6 +54,21 @@ def add_tab():
     ]]
 
     return add_tab_layout
+
+
+def info_tab():
+    info_tab_layout = [
+        [
+            sg.Text('Time Today:'),
+            sg.Text('', key='-TIME_TODAY-')
+        ],
+        [
+            sg.Text('Project Time: '),
+            sg.Text('', key='-PROJECT_TIME-')
+        ]
+    ]
+
+    return info_tab_layout
 
 
 def settings_tab():

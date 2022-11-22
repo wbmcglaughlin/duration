@@ -70,6 +70,12 @@ def main():
         elif event == 'START':
             if window['-START_TIME-'].get() == "":
                 window['-START_TIME-'].update(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+            current = values['-DATA_TYPE-']
+            if current != "":
+                df = pd.read_csv(get_app_data_path() + current)
+                window['-PROJECT_TIME-'].update(sum(df['minutes']))
+
         elif event == 'END':
             add_new_duration_entry(
                 values['-DATA_TYPE-'],

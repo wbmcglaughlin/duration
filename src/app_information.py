@@ -1,7 +1,7 @@
 import sys
 from os import path, environ
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 APP_NAME = 'durations'
 
 DURATIONS_FOLDER = './data/'
