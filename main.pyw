@@ -6,6 +6,7 @@ import PySimpleGUI as sg
 
 from src.app_information import get_app_data_path, get_app_path, DEBUG_MODE
 from src.generate_layout import generate_layout
+from src.user_data import get_today_duration
 
 ALPHA = 0.7
 THEME = 'black'
@@ -57,7 +58,10 @@ def main():
     # ----------------  Event Loop  ----------------
     while True:
         event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
+
         if event == sg.WIN_CLOSED or event.startswith('Exit'):
+            # If program is closed.
+
             if window['-START_TIME-'].get() != "":
                 add_new_duration_entry(
                     values['-DATA_TYPE-'],
@@ -66,10 +70,13 @@ def main():
                     window['-ELAPSED_TIME-'].get())
 
             break
+
         elif event == 'ADD':
+            # If new duration node is added.
             create_new_duration_node(window, values['-ADD_TYPE-'])
 
         elif event == 'START':
+            # If start of new session.
             if window['-START_TIME-'].get() == "":
                 window['-START_TIME-'].update(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
@@ -79,6 +86,7 @@ def main():
                 window['-PROJECT_TIME-'].update(sum(df['minutes']))
 
         elif event == 'END':
+            # If end of session.
             if window['-START_TIME-'].get() != "":
                 add_new_duration_entry(
                     values['-DATA_TYPE-'],
@@ -89,8 +97,10 @@ def main():
                 window['-START_TIME-'].update("")
                 window['-ELAPSED_TIME-'].update("")
                 window['-PROG-'].update(int(0))
+                window['-TIME_TODAY-'].update(f'{get_today_duration():.2f}')
 
         elif event == '-DATA_FOLDER-':
+            # If open data text is clicked.
             abs_path = os.path.abspath(get_app_path())
             os.startfile(abs_path)
 

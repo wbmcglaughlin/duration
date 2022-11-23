@@ -23,8 +23,9 @@ def generate_layout():
     )]]
 
     layout += [[sg.Text('Refresh', font='Any 8', key='-REFRESH-', enable_events=True),
-                sg.Text('❎', enable_events=True, key='Exit Text'),
-                sg.Text("Open Data", key='-DATA_FOLDER-', enable_events=True, justification='right')]]
+                sg.Text("Open Data", font='Any 8', key='-DATA_FOLDER-', enable_events=True),
+                sg.Text('❎', enable_events=True, key='Exit Text')
+                ]]
 
     return layout
 
@@ -70,7 +71,7 @@ def info_tab():
         ],
         [
             sg.Text('Project Time: '),
-            sg.Text('', key='-PROJECT_TIME-')
+            sg.Text('-', key='-PROJECT_TIME-')
         ]
     ]
 
