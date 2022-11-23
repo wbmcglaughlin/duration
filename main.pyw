@@ -34,7 +34,7 @@ def update_window(window):
 
         duration_percent = elapsed_time.total_seconds() / 60 / window['-DURATION_TIME-'].get() * 100
         if DEBUG_MODE:
-            duration_percent *= 200
+            duration_percent *= 10
 
         window['-PROG-'].update(int(duration_percent))
         window['-ELAPSED_TIME-'].update(f'{elapsed_time.total_seconds() / 60:.2f}')
@@ -103,6 +103,12 @@ def main():
             # If open data text is clicked.
             abs_path = os.path.abspath(get_app_path())
             os.startfile(abs_path)
+
+        elif event == '-CANCEL-':
+            window['-START_TIME-'].update("")
+            window['-ELAPSED_TIME-'].update("")
+            window['-PROG-'].update(int(0))
+            window['-TIME_TODAY-'].update(f'{get_today_duration():.2f}')
 
         update_window(window)
 
