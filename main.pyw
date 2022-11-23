@@ -68,6 +68,7 @@ def main():
             break
         elif event == 'ADD':
             create_new_duration_node(window, values['-ADD_TYPE-'])
+
         elif event == 'START':
             if window['-START_TIME-'].get() == "":
                 window['-START_TIME-'].update(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -88,6 +89,7 @@ def main():
                 window['-START_TIME-'].update("")
                 window['-ELAPSED_TIME-'].update("")
                 window['-PROG-'].update(int(0))
+
         elif event == '-DATA_FOLDER-':
             abs_path = os.path.abspath(get_app_path())
             os.startfile(abs_path)

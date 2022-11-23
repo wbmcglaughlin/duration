@@ -2,13 +2,19 @@ import os
 
 import PySimpleGUI as sg
 
-from src.app_information import get_app_data_path
+from src.app_information import get_app_data_path, DEBUG_MODE
+from src.user_data import get_today_duration
 
 BAR_COLORS = ('#23a0a0', '#56d856', '#be45be', '#5681d8', '#d34545', '#BE7C29')
 
 
 def generate_layout():
-    layout = [[sg.TabGroup(
+    layout = []
+
+    if DEBUG_MODE:
+        layout += [[sg.Text("DEBUG MODE")]]
+
+    layout += [[sg.TabGroup(
         [[
             sg.Tab('main', main_tab()),
             sg.Tab('add', add_tab()),
@@ -60,7 +66,7 @@ def info_tab():
     info_tab_layout = [
         [
             sg.Text('Time Today:'),
-            sg.Text('', key='-TIME_TODAY-')
+            sg.Text(f'{get_today_duration():.2f}', key='-TIME_TODAY-')
         ],
         [
             sg.Text('Project Time: '),
