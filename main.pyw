@@ -1,46 +1,13 @@
 #!/usr/bin/env python
-from datetime import datetime
 import os
-import pandas as pd
 import PySimpleGUI as sg
 
-from src.app_information import get_app_data_path, get_app_path, DEBUG_MODE
+from src.app_information import get_app_data_path, get_app_path
+from src.app_loop import run_app, update_window
 from src.generate_layout import generate_layout
-from src.user_data import get_today_duration, get_today_project_duration
 
 ALPHA = 0.7
 THEME = 'black'
-UPDATE_FREQUENCY_MILLISECONDS = 20 * 1000
-
-DURATION_COLUMNS = ['start', 'end', 'minutes']
-
-def create_new_duration_node(window, duration_node_name):
-    pd.DataFrame(columns=DURATION_COLUMNS).to_csv(get_app_data_path() + duration_node_name + '.csv', index=False)
-
-    window['-DATA_TYPE-'].update(value=duration_node_name + '.csv', values=list(os.listdir(get_app_data_path())))
-
-
-def add_new_duration_entry(duration_node_name, start_time, end_time, seconds):
-    df = pd.read_csv(get_app_data_path() + duration_node_name)
-    df.loc[len(df)] = [start_time, end_time, seconds]
-
-    df.to_csv(get_app_data_path() + duration_node_name, index=False)
-
-def update_window(window):
-    try:
-        start_time = datetime.strptime(window['-START_TIME-'].get(), "%Y-%m-%d %H:%M:%S")
-        time_now = datetime.now()
-        elapsed_time = time_now - start_time
-
-        duration_percent = elapsed_time.total_seconds() / 60 / window['-DURATION_TIME-'].get() * 100
-        if DEBUG_MODE:
-            duration_percent *= 10
-
-        window['-PROG-'].update(int(duration_percent))
-        window['-ELAPSED_TIME-'].update(f'{elapsed_time.total_seconds() / 60:.2f}')
-
-    except ValueError as e:
-        pass
 
 
 def main():
@@ -55,64 +22,7 @@ def main():
 
     update_window(window)  # sets the progress bars
 
-    # ----------------  Event Loop  ----------------
-    while True:
-        event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
-
-        if event == sg.WIN_CLOSED or event.startswith('Exit'):
-            # If program is closed.
-
-            if window['-START_TIME-'].get() != "":
-                add_new_duration_entry(
-                    values['-DATA_TYPE-'],
-                    window['-START_TIME-'].get(),
-                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    window['-ELAPSED_TIME-'].get())
-
-            break
-
-        elif event == 'ADD':
-            # If new duration node is added.
-            create_new_duration_node(window, values['-ADD_TYPE-'])
-
-        elif event == 'START':
-            # If start of new session.
-            if window['-START_TIME-'].get() == "":
-                window['-START_TIME-'].update(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
-            current = values['-DATA_TYPE-']
-            if current != "":
-                df = pd.read_csv(get_app_data_path() + current)
-                window['-PROJECT_TIME-'].update(sum(df['minutes']))
-
-        elif event == 'END':
-            # If end of session.
-            if window['-START_TIME-'].get() != "":
-                add_new_duration_entry(
-                    values['-DATA_TYPE-'],
-                    window['-START_TIME-'].get(),
-                    datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    window['-ELAPSED_TIME-'].get())
-
-                window['-START_TIME-'].update("")
-                window['-ELAPSED_TIME-'].update("")
-                window['-PROG-'].update(int(0))
-                window['-TIME_TODAY-'].update(f'{get_today_duration():.2f}')
-                window['-PROJECT_TIME_TODAY-'].update(f"{get_today_project_duration(values['-DATA_TYPE-']):.2f}")
-
-        elif event == '-DATA_FOLDER-':
-            # If open data text is clicked.
-            abs_path = os.path.abspath(get_app_path())
-            os.startfile(abs_path)
-
-        elif event == '-CANCEL-':
-            window['-START_TIME-'].update("")
-            window['-ELAPSED_TIME-'].update("")
-            window['-PROG-'].update(int(0))
-            window['-TIME_TODAY-'].update(f'{get_today_duration():.2f}')
-            window['-PROJECT_TIME_TODAY-'].update(f"{get_today_project_duration(values['-DATA_TYPE-']):.2f}")
-
-        update_window(window)
+    run_app(window)
 
 
 if __name__ == "__main__":
