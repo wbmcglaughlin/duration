@@ -21,3 +21,16 @@ def get_today_duration():
         time += sum(today['minutes'])
 
     return time
+
+def get_today_project_duration(duration_node):
+    today_date = datetime.now().strftime("%Y-%m-%d")
+
+    time = 0
+
+    df = pd.read_csv(get_app_data_path() + duration_node)
+
+    today = df[df['start'].str.contains(today_date)]
+
+    time += sum(today['minutes'])
+
+    return time

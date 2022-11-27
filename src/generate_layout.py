@@ -72,7 +72,9 @@ def info_tab():
         ],
         [
             sg.Text('Project Time: '),
-            sg.Text('-', key='-PROJECT_TIME-')
+            sg.Text('-', key='-PROJECT_TIME-'),
+            sg.Text('Project Time Today:'),
+            sg.Text(f'-', key='-PROJECT_TIME_TODAY-')
         ]
     ]
 

@@ -6,7 +6,7 @@ import PySimpleGUI as sg
 
 from src.app_information import get_app_data_path, get_app_path, DEBUG_MODE
 from src.generate_layout import generate_layout
-from src.user_data import get_today_duration
+from src.user_data import get_today_duration, get_today_project_duration
 
 ALPHA = 0.7
 THEME = 'black'
@@ -98,6 +98,7 @@ def main():
                 window['-ELAPSED_TIME-'].update("")
                 window['-PROG-'].update(int(0))
                 window['-TIME_TODAY-'].update(f'{get_today_duration():.2f}')
+                window['-PROJECT_TIME_TODAY-'].update(f"{get_today_project_duration(values['-DATA_TYPE-']):.2f}")
 
         elif event == '-DATA_FOLDER-':
             # If open data text is clicked.
@@ -109,6 +110,7 @@ def main():
             window['-ELAPSED_TIME-'].update("")
             window['-PROG-'].update(int(0))
             window['-TIME_TODAY-'].update(f'{get_today_duration():.2f}')
+            window['-PROJECT_TIME_TODAY-'].update(f"{get_today_project_duration(values['-DATA_TYPE-']):.2f}")
 
         update_window(window)
 
