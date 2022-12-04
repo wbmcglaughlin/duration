@@ -2,7 +2,7 @@
 import os
 import PySimpleGUI as sg
 
-from src.app_information import get_app_data_path, get_app_path
+from src.app_information import get_app_data_path, get_app_path, get_app_archive_path
 from src.app_loop import run_app, update_window
 from src.generate_layout import generate_layout
 
@@ -31,5 +31,8 @@ if __name__ == "__main__":
 
     if not os.path.exists(get_app_data_path()):
         os.mkdir(get_app_data_path())
+
+    if not os.path.exists(get_app_archive_path()):
+        os.mkdir(get_app_archive_path())
 
     main()

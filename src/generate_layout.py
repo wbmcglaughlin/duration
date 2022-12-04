@@ -2,8 +2,8 @@ import os
 
 import PySimpleGUI as sg
 
-from src.app_information import get_app_data_path, DEBUG_MODE
-from src.user_data import get_today_duration
+from src.app_information import get_app_data_path, DEBUG_MODE, get_app_archive_path
+from src.user_data import get_today_duration, get_total_project_time
 
 BAR_COLORS = ('#23a0a0', '#56d856', '#be45be', '#5681d8', '#d34545', '#BE7C29')
 
@@ -18,13 +18,15 @@ def generate_layout():
         [[
             sg.Tab('main', main_tab()),
             sg.Tab('add', add_tab()),
-            sg.Tab('info', info_tab())
+            sg.Tab('info', info_tab()),
+            sg.Tab('archive', archive_tab())
         ]]
     )]]
 
     layout += [[sg.Text('Refresh', font='Any 8', key='-REFRESH-', enable_events=True),
                 sg.Text("Cancel", font='Any 8', key='-CANCEL-', enable_events=True),
                 sg.Text("Open Data", font='Any 8', key='-DATA_FOLDER-', enable_events=True),
+                sg.Text("Archive", font='Any 8', key='-ARCHIVE_DURATION-', enable_events=True),
                 sg.Text('❎', enable_events=True, key='Exit Text')
                 ]]
 
@@ -80,6 +82,21 @@ def info_tab():
 
     return info_tab_layout
 
+
+def archive_tab():
+    archive_tab_layout_table = []
+    for archived_duration_path in os.listdir(get_app_archive_path()):
+        archive_tab_layout_table.append(
+            [sg.Text(archived_duration_path), sg.Text(f'{get_total_project_time(archived_duration_path):.2f}')]
+        )
+
+    archive_tab_layout = [
+        [
+            sg.Column(archive_tab_layout_table, scrollable=True, vertical_scroll_only=True)
+        ]
+    ]
+
+    return archive_tab_layout
 
 def settings_tab():
     pass

@@ -3,9 +3,9 @@ import os
 import pandas as pd
 import PySimpleGUI as sg
 
-from src.app_information import get_app_data_path, get_app_path, DEBUG_MODE
-from src.duration_handler import add_new_duration_entry, create_new_duration_node
-from src.user_data import get_today_duration, get_today_project_duration
+from src.app_information import get_app_data_path, get_app_path, DEBUG_MODE, get_app_archive_path
+from src.duration_handler import add_new_duration_entry, create_new_duration_node, archive_duration
+from src.user_data import get_today_duration, get_today_project_duration, get_total_project_time
 
 UPDATE_FREQUENCY_MILLISECONDS = 20 * 1000
 
@@ -32,8 +32,7 @@ def run_app(window):
 
             current = values['-DATA_TYPE-']
             if current != "":
-                df = pd.read_csv(get_app_data_path() + current)
-                window['-PROJECT_TIME-'].update(sum(df['minutes']))
+                window['-PROJECT_TIME-'].update(get_total_project_time(current))
 
         elif event == 'END':
             # If end of session.
@@ -46,6 +45,13 @@ def run_app(window):
             # If open data text is clicked.
             abs_path = os.path.abspath(get_app_path())
             os.startfile(abs_path)
+
+        elif event == '-ARCHIVE_DURATION-':
+            # If end of session.
+            if window['-START_TIME-'].get() != "":
+                send_to_duration_entry(window, values)
+            if values['-DATA_TYPE-'] != "":
+                archive_duration(window, values)
 
         elif event == '-CANCEL-':
             update_values_on_reset(window, values)
@@ -73,7 +79,11 @@ def update_values_on_reset(window, values):
     window['-ELAPSED_TIME-'].update("")
     window['-PROG-'].update(int(0))
     window['-TIME_TODAY-'].update(f'{get_today_duration():.2f}')
-    window['-PROJECT_TIME_TODAY-'].update(f"{get_today_project_duration(values['-DATA_TYPE-']):.2f}")
+
+    current = values['-DATA_TYPE-']
+    if current != "":
+        window['-PROJECT_TIME_TODAY-'].update(f"{get_today_project_duration(values['-DATA_TYPE-']):.2f}")
+        window['-PROJECT_TIME-'].update(get_total_project_time(current))
 
 def send_to_duration_entry(window, values):
     add_new_duration_entry(
