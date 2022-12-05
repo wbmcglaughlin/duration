@@ -86,8 +86,9 @@ def update_values_on_reset(window, values):
         window['-PROJECT_TIME-'].update(get_total_project_time(current))
 
 def send_to_duration_entry(window, values):
-    add_new_duration_entry(
-        values['-DATA_TYPE-'],
-        window['-START_TIME-'].get(),
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        window['-ELAPSED_TIME-'].get())
+    if values['-DATA_TYPE-'] != "":
+        add_new_duration_entry(
+            values['-DATA_TYPE-'],
+            window['-START_TIME-'].get(),
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            window['-ELAPSED_TIME-'].get())

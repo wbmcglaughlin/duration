@@ -87,7 +87,7 @@ def archive_tab():
     archive_tab_layout_table = []
     for archived_duration_path in os.listdir(get_app_archive_path()):
         archive_tab_layout_table.append(
-            [sg.Text(archived_duration_path), sg.Text(f'{get_total_project_time(archived_duration_path):.2f}')]
+            [sg.Text(archived_duration_path), sg.Text(f'{get_total_project_time(archived_duration_path, True):.2f}')]
         )
 
     archive_tab_layout = [
