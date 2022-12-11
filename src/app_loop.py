@@ -82,7 +82,7 @@ def update_values_on_reset(window, values):
     current = values['-DATA_TYPE-']
     if current != "":
         window['-PROJECT_TIME_TODAY-'].update(f"{get_today_project_duration(values['-DATA_TYPE-']):.2f}")
-        window['-PROJECT_TIME-'].update(get_total_project_time(current))
+        window['-PROJECT_TIME-'].update(f"{get_total_project_time(current):.2f}")
 
 def send_to_duration_entry(window, values):
     if values['-DATA_TYPE-'] != "":
