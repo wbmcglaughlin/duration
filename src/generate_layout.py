@@ -34,7 +34,7 @@ def generate_layout():
 
 
 def main_tab():
-    duration_nodes_list = os.listdir(get_app_data_path())
+    duration_nodes_list = list(os.listdir(get_app_data_path()))
 
     bar_color = sg.theme_progress_bar_color()
     this_color = BAR_COLORS[1 % len(BAR_COLORS)]
@@ -47,8 +47,9 @@ def main_tab():
 
     main_tab_layout += [[
         sg.Text('Selected:'),
-        sg.Combo(list(duration_nodes_list), size=(20, 1), key='-DATA_TYPE-'),
-        sg.Combo(list([15, 30, 45, 60]), default_value=60, size=(5, 1), key='-DURATION_TIME-'),
+        sg.Combo(duration_nodes_list, default_value=duration_nodes_list[0],
+                 size=(20, 1), key='-DATA_TYPE-', readonly=True),
+        sg.Combo(list([15, 30, 45, 60]), default_value=45, size=(5, 1), key='-DURATION_TIME-', readonly=True),
         sg.Text('Start', enable_events=True, key='START'),
         sg.Text('End', enable_events=True, key='END')
     ]]

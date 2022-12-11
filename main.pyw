@@ -16,7 +16,7 @@ def main():
     # ----------------  Create Layout  ---------------- #
     layout = generate_layout()
 
-    # ----------------  Create Window  ----------------
+    # ----------------  Create Window  ---------------- #
     window = sg.Window('Duration', layout, keep_on_top=True, grab_anywhere=True, no_titlebar=True,
                        alpha_channel=ALPHA, use_default_focus=False, finalize=True)
 

@@ -1,6 +1,5 @@
 from datetime import datetime
 import os
-import pandas as pd
 import PySimpleGUI as sg
 
 from src.app_information import get_app_data_path, get_app_path, DEBUG_MODE, get_app_archive_path
