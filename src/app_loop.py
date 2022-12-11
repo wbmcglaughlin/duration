@@ -31,7 +31,7 @@ def run_app(window):
 
             current = values['-DATA_TYPE-']
             if current != "":
-                window['-PROJECT_TIME-'].update(get_total_project_time(current))
+                window['-PROJECT_TIME-'].update(f"{get_total_project_time(current):.2f}")
 
         elif event == 'END':
             # If end of session.
