@@ -97,11 +97,36 @@ def archive_tab():
             sg.Text('Archive'),
             sg.Combo(archived_durations, default_value=archived_durations[0],
                      size=(20, 1), key='-DATA_TYPE-', readonly=True),
-            sg.Text('Open Archive',  font='Any 8', enable_events=True, key='-OPEN_ARCHIVE-')
+            sg.Text('Open Archive', font='Any 8', enable_events=True, key='-OPEN_ARCHIVE-')
         ]
     ]
 
     return archive_tab_layout
+
+
+def archive_window_tab():
+    archive_tab_layout_table = []
+    archived_durations = os.listdir(get_app_archive_path())
+    for archived_duration_path in archived_durations:
+        archive_tab_layout_table.append(
+            [archived_duration_path, f'{get_total_project_time(archived_duration_path, True):.2f}']
+        )
+
+    archive_tab_layout = [
+        [
+            sg.Table(archive_tab_layout_table,
+                     headings=['Duration', 'Total Time'],
+                     max_col_width=25,
+                     auto_size_columns=True,
+                     justification='right',
+                     # alternating_row_color='lightblue',
+                     num_rows=min(len(archive_tab_layout_table), 20))
+        ],
+        [sg.Text('❎', enable_events=True, key='Exit Text')]
+    ]
+
+    return archive_tab_layout
+
 
 def settings_tab():
     pass

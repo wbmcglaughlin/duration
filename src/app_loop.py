@@ -5,6 +5,7 @@ import PySimpleGUI as sg
 from src.app_information import get_app_data_path, get_app_path, DEBUG_MODE, get_app_archive_path
 from src.duration_handler import add_new_duration_entry, create_new_duration_node, archive_duration
 from src.user_data import get_today_duration, get_today_project_duration, get_total_project_time
+from src.generate_layout import archive_window_tab
 
 ALPHA = 0.7
 UPDATE_FREQUENCY_MILLISECONDS = 20 * 1000
@@ -56,18 +57,13 @@ def run_app(window):
             update_values_on_reset(window, values)
 
         if event == "-OPEN_ARCHIVE-":
-            open_window()
+            open_archive_window()
 
         update_window(window)
 
 
-def open_window():
-    layout = [
-        [
-            sg.Text("New Window", key="new"),
-            sg.Text('❎', enable_events=True, key='Exit Text')
-        ]
-    ]
+def open_archive_window():
+    layout = archive_window_tab()
     window = sg.Window("Second Window", layout, keep_on_top=True, grab_anywhere=True, no_titlebar=True,
                        alpha_channel=ALPHA, use_default_focus=False, finalize=True)
 
