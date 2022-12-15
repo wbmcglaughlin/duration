@@ -93,7 +93,8 @@ def archive_tab():
 
     archive_tab_layout = [
         [
-            sg.Column(archive_tab_layout_table, scrollable=True, vertical_scroll_only=True)
+            sg.Text('Open Archive', enable_events=True, key='-OPEN_ARCHIVE-')
+            # sg.Column(archive_tab_layout_table, scrollable=True, vertical_scroll_only=True)
         ]
     ]
 

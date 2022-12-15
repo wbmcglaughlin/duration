@@ -6,6 +6,7 @@ from src.app_information import get_app_data_path, get_app_path, DEBUG_MODE, get
 from src.duration_handler import add_new_duration_entry, create_new_duration_node, archive_duration
 from src.user_data import get_today_duration, get_today_project_duration, get_total_project_time
 
+ALPHA = 0.7
 UPDATE_FREQUENCY_MILLISECONDS = 20 * 1000
 
 def run_app(window):
@@ -14,7 +15,6 @@ def run_app(window):
 
         if event == sg.WIN_CLOSED or event.startswith('Exit'):
             # If program is closed.
-
             if window['-START_TIME-'].get() != "":
                 send_to_duration_entry(window, values)
 
@@ -55,7 +55,29 @@ def run_app(window):
         elif event == '-CANCEL-':
             update_values_on_reset(window, values)
 
+        if event == "-OPEN_ARCHIVE-":
+            open_window()
+
         update_window(window)
+
+
+def open_window():
+    layout = [
+        [
+            sg.Text("New Window", key="new"),
+            sg.Text('❎', enable_events=True, key='Exit Text')
+        ]
+    ]
+    window = sg.Window("Second Window", layout, keep_on_top=True, grab_anywhere=True, no_titlebar=True,
+                       alpha_channel=ALPHA, use_default_focus=False, finalize=True)
+
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event.startswith('Exit'):
+            break
+
+    window.close()
+
 
 def update_window(window):
     try:

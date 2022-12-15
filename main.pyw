@@ -9,7 +9,6 @@ from src.generate_layout import generate_layout
 ALPHA = 0.7
 THEME = 'black'
 
-
 def main():
     sg.theme(THEME)
 
