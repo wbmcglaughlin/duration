@@ -86,15 +86,18 @@ def info_tab():
 
 def archive_tab():
     archive_tab_layout_table = []
-    for archived_duration_path in os.listdir(get_app_archive_path()):
+    archived_durations = os.listdir(get_app_archive_path())
+    for archived_duration_path in archived_durations:
         archive_tab_layout_table.append(
             [sg.Text(archived_duration_path), sg.Text(f'{get_total_project_time(archived_duration_path, True):.2f}')]
         )
 
     archive_tab_layout = [
         [
-            sg.Text('Open Archive', enable_events=True, key='-OPEN_ARCHIVE-')
-            # sg.Column(archive_tab_layout_table, scrollable=True, vertical_scroll_only=True)
+            sg.Text('Archive'),
+            sg.Combo(archived_durations, default_value=archived_durations[0],
+                     size=(20, 1), key='-DATA_TYPE-', readonly=True),
+            sg.Text('Open Archive',  font='Any 8', enable_events=True, key='-OPEN_ARCHIVE-')
         ]
     ]
 
