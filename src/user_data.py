@@ -35,7 +35,10 @@ def get_today_project_duration(duration_node):
 
     return time
 
-def get_total_project_time(duration_node, is_archived=False):
+def get_total_project_time(duration_node: str, is_archived=False):
+    if not duration_node.endswith('csv'):
+        duration_node += '.csv'
+
     time = 0
 
     if not is_archived:

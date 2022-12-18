@@ -26,6 +26,7 @@ def run_app(window):
             create_new_duration_node(window, values['-ADD_TYPE-'])
 
             window['-TAB_GROUP-'].Widget.select(0)
+
         elif event == 'START':
             # If start of new session.
             if window['-START_TIME-'].get() == "":

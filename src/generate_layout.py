@@ -2,7 +2,7 @@ import os
 
 import PySimpleGUI as sg
 
-from src.app_information import get_app_data_path, DEBUG_MODE, get_app_archive_path
+from src.app_information import get_app_data_path, DEBUG_MODE, get_app_archive_path, get_duration_node_list
 from src.user_data import get_today_duration, get_total_project_time
 
 BAR_COLORS = ('#23a0a0', '#56d856', '#be45be', '#5681d8', '#d34545', '#BE7C29')
@@ -36,7 +36,7 @@ def generate_layout():
 
 
 def main_tab():
-    duration_nodes_list = list(os.listdir(get_app_data_path()))
+    duration_nodes_list = get_duration_node_list()
 
     bar_color = sg.theme_progress_bar_color()
     this_color = BAR_COLORS[1 % len(BAR_COLORS)]
