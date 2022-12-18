@@ -16,7 +16,7 @@ def add_new_duration_entry(duration_node_name, start_time, end_time, seconds):
     df = pd.read_csv(get_app_data_path() + duration_node_name + '.csv')
     df.loc[len(df)] = [start_time, end_time, seconds]
 
-    df.to_csv(get_app_data_path() + duration_node_name, index=False)
+    df.to_csv(get_app_data_path() + duration_node_name + '.csv', index=False)
 
 def archive_duration(window, values):
     os.rename(get_app_data_path() + values['-DATA_TYPE-'] + '.csv', get_app_archive_path() + values['-DATA_TYPE-'] + '.csv')
