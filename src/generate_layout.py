@@ -20,7 +20,9 @@ def generate_layout():
             sg.Tab('add', add_tab()),
             sg.Tab('info', info_tab()),
             sg.Tab('archive', archive_tab())
-        ]]
+        ]],
+        key='-TAB_GROUP-',
+        enable_events=True
     )]]
 
     layout += [[sg.Text('Refresh', font='Any 8', key='-REFRESH-', enable_events=True),
