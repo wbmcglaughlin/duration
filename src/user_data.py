@@ -22,6 +22,7 @@ def get_today_duration():
 
     return time
 
+
 def get_today_project_duration(duration_node):
     today_date = datetime.now().strftime("%Y-%m-%d")
 
@@ -34,6 +35,7 @@ def get_today_project_duration(duration_node):
     time += sum(today['minutes'])
 
     return time
+
 
 def get_total_project_time(duration_node: str, is_archived=False):
     if not duration_node.endswith('csv'):

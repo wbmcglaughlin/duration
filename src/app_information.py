@@ -2,7 +2,7 @@ import os
 import sys
 from os import path, environ
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 APP_NAME = 'durations'
 DURATIONS_FOLDER = './data/'
 ARCHIVE_FOLDER = './archived/'
