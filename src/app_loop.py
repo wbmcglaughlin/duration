@@ -10,6 +10,7 @@ from src.generate_layout import archive_window_tab
 ALPHA = 0.7
 UPDATE_FREQUENCY_MILLISECONDS = 20 * 1000
 
+
 def run_app(window):
     while True:
         event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
@@ -93,6 +94,7 @@ def update_window(window):
     except ValueError as e:
         pass
 
+
 def update_values_on_reset(window, values):
     window['-START_TIME-'].update("")
     window['-ELAPSED_TIME-'].update("")
@@ -103,6 +105,7 @@ def update_values_on_reset(window, values):
     if current != "":
         window['-PROJECT_TIME_TODAY-'].update(f"{get_today_project_duration(values['-DATA_TYPE-']):.2f}")
         window['-PROJECT_TIME-'].update(f"{get_total_project_time(current):.2f}")
+
 
 def send_to_duration_entry(window, values):
     if values['-DATA_TYPE-'] != "":

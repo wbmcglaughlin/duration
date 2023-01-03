@@ -47,9 +47,11 @@ def main_tab():
                         sg.Text("", key='-ELAPSED_TIME-')
                         ]]
 
+    default_duration = '' if len(duration_nodes_list) == 0 else duration_nodes_list[0]
+
     main_tab_layout += [[
         sg.Text('Selected:'),
-        sg.Combo(duration_nodes_list, default_value=duration_nodes_list[0],
+        sg.Combo(duration_nodes_list, default_value=default_duration,
                  size=(20, 1), key='-DATA_TYPE-', readonly=True),
         sg.Combo(list([15, 30, 45, 60]), default_value=45, size=(5, 1), key='-DURATION_TIME-', readonly=True),
         sg.Text('Start', enable_events=True, key='START'),
@@ -94,10 +96,12 @@ def archive_tab():
             [sg.Text(archived_duration_path), sg.Text(f'{get_total_project_time(archived_duration_path, True):.2f}')]
         )
 
+    default_duration = '' if len(archived_durations) == 0 else archived_durations[0]
+
     archive_tab_layout = [
         [
             sg.Text('Archive'),
-            sg.Combo(archived_durations, default_value=archived_durations[0],
+            sg.Combo(archived_durations, default_value=default_duration,
                      size=(20, 1), key='-DATA_TYPE-', readonly=True),
             sg.Text('Open Archive', font='Any 8', enable_events=True, key='-OPEN_ARCHIVE-')
         ]
