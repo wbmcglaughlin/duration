@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import os
 import PySimpleGUI as sg
 
@@ -8,6 +7,7 @@ from src.generate_layout import generate_layout
 
 ALPHA = 0.7
 THEME = 'black'
+
 
 def main():
     sg.theme(THEME)
@@ -24,7 +24,7 @@ def main():
     run_app(window)
 
 
-if __name__ == "__main__":
+def preload():
     if not os.path.exists(get_app_path()):
         os.mkdir(get_app_path())
 
@@ -34,4 +34,9 @@ if __name__ == "__main__":
     if not os.path.exists(get_app_archive_path()):
         os.mkdir(get_app_archive_path())
 
+
+if __name__ == "__main__":
+    preload()
     main()
+
+
