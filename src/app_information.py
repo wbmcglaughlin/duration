@@ -1,8 +1,9 @@
 import os
 import sys
 from os import path, environ
+from appdirs import *
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 APP_NAME = 'durations'
 DURATIONS_FOLDER = './data/'
 ARCHIVE_FOLDER = './archived/'
@@ -12,8 +13,8 @@ DEBUG_DURATIONS = './durations'
 def get_app_path():
     if DEBUG_MODE:
         return DEBUG_DURATIONS
-    if sys.platform == 'win32':
-        return path.join(environ['APPDATA'], APP_NAME)
+
+    return user_data_dir(APP_NAME, 'duration_app')
 
 
 def get_app_data_path():
